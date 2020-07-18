@@ -50,17 +50,17 @@ print('Data loaded')
 model = Sequential()
 #add long short term memory cell
 #output_shape is (_, 700), input_shape is (number_of_inputs, input_length), return full sequence
-model.add(LSTM(256, input_shape=(X_2.shape[1], X_2.shape[2]), return_sequences=True)) #layer 1
+model.add(LSTM(700, input_shape=(X_2.shape[1], X_2.shape[2]), return_sequences=True)) #layer 1
 #account for overfitting
 model.add(Dropout(0.2))
 
 #add another LSTM layer
-model.add(LSTM(256, return_sequences=True)) #layer 2
+model.add(LSTM(700, return_sequences=True)) #layer 2
 #account for overfitting
 model.add(Dropout(0.2))
 
 #add another LSTM layer
-model.add(LSTM(256)) #layer 3
+model.add(LSTM(700)) #layer 3
 #account for overfitting
 model.add(Dropout(0.2))
 
