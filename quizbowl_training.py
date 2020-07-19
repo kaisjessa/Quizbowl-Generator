@@ -11,7 +11,7 @@ from keras.utils import np_utils
 import sys
 
 #open text file with poems
-text = (open("quizbowl_small.txt").read()).lower()
+text = (open("quizbowl.txt").read()).lower()
 text = text.split(' ')
 #sort list of unique characters in text
 chars = sorted(list(set(text)))
