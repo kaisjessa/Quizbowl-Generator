@@ -12,7 +12,7 @@ import sys
 
 #open text file with poems
 text = (open("quizbowl_small.txt").read()).lower()
-#text = text.split(' ')
+text = text.split(' ')
 #sort list of unique characters in text
 chars = sorted(list(set(text)))
 print(chars)
@@ -25,7 +25,7 @@ int_to_char = {n:char for n,char in enumerate(chars)}
 X,y = [],[]
 text_length = len(text)
 #length of string given to NN to make prediction
-str_length = 100
+str_length = 25
 print("Unique chars:", len(chars))
 print("Text length:", text_length)
 
@@ -51,17 +51,17 @@ print('Data loaded')
 model = Sequential()
 #add long short term memory cell
 #output_shape is (_, 700), input_shape is (number_of_inputs, input_length), return full sequence
-model.add(LSTM(256, input_shape=(X_2.shape[1], X_2.shape[2]), return_sequences=True)) #layer 1
+model.add(LSTM(50, input_shape=(X_2.shape[1], X_2.shape[2]), return_sequences=True)) #layer 1
 #account for overfitting
 model.add(Dropout(0.2))
 
 #add another LSTM layer
-model.add(LSTM(256, return_sequences=True)) #layer 2
+model.add(LSTM(50, return_sequences=True)) #layer 2
 #account for overfitting
 model.add(Dropout(0.2))
 
 #add another LSTM layer
-model.add(LSTM(256)) #layer 3
+model.add(LSTM(50)) #layer 3
 #account for overfitting
 model.add(Dropout(0.2))
 
@@ -71,12 +71,12 @@ model.add(Dense(y_2.shape[1], activation='softmax')) #layer 4
 model.compile(loss='categorical_crossentropy', optimizer='adam')
 print("Model compiled")
 
-filepath = "current_character_256.h5"
+filepath = "current_word_50_50_50.h5"
 checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
 callbacks_list = [checkpoint]
 
 #train the model
-model.fit(X_2, y_2, epochs=100, batch_size=256, callbacks=callbacks_list)
+model.fit(X_2, y_2, epochs=1000, batch_size=128, callbacks=callbacks_list)
 #save the model
-model.save("final_character_256.h5")
+model.save("final_word_50_50_50.h5")
 print("Training Completed!")

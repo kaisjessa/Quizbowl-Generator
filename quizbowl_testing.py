@@ -50,17 +50,17 @@ print('done')
 model = Sequential()
 #add long short term memory cell
 #output_shape is (_, 700), input_shape is (number_of_inputs, input_length), return full sequence
-model.add(LSTM(700, input_shape=(X_2.shape[1], X_2.shape[2]), return_sequences=True)) #layer 1
+model.add(LSTM(256, input_shape=(X_2.shape[1], X_2.shape[2]), return_sequences=True)) #layer 1
 #account for overfitting
 model.add(Dropout(0.2))
 
 #add another LSTM layer
-model.add(LSTM(700, return_sequences=True)) #layer 2
+model.add(LSTM(256, return_sequences=True)) #layer 2
 #account for overfitting
 model.add(Dropout(0.2))
 
 #add another LSTM layer
-model.add(LSTM(700)) #layer 3
+model.add(LSTM(256)) #layer 3
 #account for overfitting
 model.add(Dropout(0.2))
 
@@ -73,7 +73,8 @@ print("Model compiled")
 
 
 #load model
-model.load_weights('700_1.h5')
+# 256_2.h5 is the current best model
+model.load_weights('256_2.h5')
 
 #sample_word = "" if len(sys.argv) < 2 else sys.argv[1]
 def check_model(keyword=""):
