@@ -118,12 +118,12 @@ model.compile(loss='categorical_crossentropy', optimizer='adam')
 print("Model compiled")
 
 filepath = "len_50_current_256.h5"
-checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=0, save_best_only=True, mode='min')
+checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
 print_callback = LambdaCallback(on_epoch_end = on_epoch_end)
 callbacks_list = [checkpoint, print_callback]
 
 #train the model
-model.fit(X_2, y_2, epochs=500, batch_size=128, callbacks=callbacks_list)
+model.fit(X_2, y_2, epochs=500, batch_size=128, verbose=2, callbacks=callbacks_list)
 #save the model
 model.save("len_50_final_256.h5")
 print("Training Completed!")
