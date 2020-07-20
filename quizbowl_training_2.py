@@ -27,7 +27,7 @@ int_to_char = {n:char for n,char in enumerate(chars)}
 X,y = [],[]
 text_length = len(text)
 #length of string given to NN to make prediction
-str_length = 50
+str_length = 100
 print("Unique chars:", len(chars))
 print("Text length:", text_length)
 
@@ -64,7 +64,7 @@ def on_epoch_end(epoch, _):
 	print("-- Generating text for epoch: %d" % epoch)
 
 	int_train = X[random.randint(0, len(X)-str_length)]
-	num_to_generate = 50
+	num_to_generate = 100
 	chars_array = [int_to_char[n] for n in int_train]
 	print('Seed: "' + ''.join(chars_array) + '"')
 	starting_text = '\n' + ''.join(chars_array) + '\n'
@@ -89,7 +89,7 @@ def on_epoch_end(epoch, _):
 
 		predicted_text = ""
 		for c in chars_array[str_length:]:
-			predicted_text += ' '
+			#predicted_text += ' '
 			predicted_text += c
 			#print("C:" + c)
 			#return(predicted_text[predicted_text.find('\n'):predicted_text.rfind('\n')])
@@ -119,7 +119,7 @@ model.add(Dense(y_2.shape[1], activation='softmax')) #layer 4
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 print("Model compiled")
 
-filepath = "current_len_50_256_no_dropout.h5"
+filepath = "current_256_no_dropout.h5"
 checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
 print_callback = LambdaCallback(on_epoch_end = on_epoch_end)
 callbacks_list = [checkpoint, print_callback]
@@ -127,5 +127,5 @@ callbacks_list = [checkpoint, print_callback]
 #train the model
 model.fit(X_2, y_2, epochs=500, batch_size=256, verbose=1, callbacks=callbacks_list)
 #save the model
-model.save("final_len_50_256_no_dropout.h5")
+model.save("final_256_no_dropout.h5")
 print("Training Completed!")
