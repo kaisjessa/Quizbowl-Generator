@@ -5,6 +5,7 @@ import keras.models
 from keras.callbacks import ModelCheckpoint
 from keras.callbacks import LambdaCallback
 from keras.models import Sequential
+from keras.layers import Embedding
 from keras.layers import Dense
 from keras.layers import Dropout
 from keras.layers import LSTM
@@ -16,7 +17,7 @@ text = (open("quizbowl.txt").read()).lower()
 #text = text.split(' ')
 #sort list of unique characters in text
 chars = sorted(list(set(text)))
-print(chars)
+#print(chars)
 #dictionary mapping chars to ints
 char_to_int = {char:n for n,char in enumerate(chars)}
 #dictionary mapping ints to chars
@@ -45,6 +46,7 @@ X_2 = np.reshape(X, (len(X), str_length, 1))
 X_2 = X_2 / float(len(chars))
 #convert Y to a one-hot array··
 y_2 = np_utils.to_categorical(y)
+y_2 = y_2.squeeze()
 print('Data loaded')
 
 
@@ -99,17 +101,17 @@ model = Sequential()
 #output_shape is (_, 700), input_shape is (number_of_inputs, input_length), return full sequence
 model.add(LSTM(256, input_shape=(X_2.shape[1], X_2.shape[2]), return_sequences=True)) #layer 1
 #account for overfitting
-model.add(Dropout(0.2))
+#model.add(Dropout(0.2))
 
 #add another LSTM layer
 model.add(LSTM(256, return_sequences=True)) #layer 2
 #account for overfitting
-model.add(Dropout(0.2))
+#model.add(Dropout(0.2))
 
 #add another LSTM layer
 model.add(LSTM(256)) #layer 3
 #account for overfitting
-model.add(Dropout(0.2))
+#model.add(Dropout(0.2))
 
 #Fully connected (dense) output layer
 model.add(Dense(y_2.shape[1], activation='softmax')) #layer 4
@@ -117,13 +119,13 @@ model.add(Dense(y_2.shape[1], activation='softmax')) #layer 4
 model.compile(loss='categorical_crossentropy', optimizer='adam')
 print("Model compiled")
 
-filepath = "len_50_current_256.h5"
+filepath = "current_len_50_256_no_dropout.h5"
 checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
 print_callback = LambdaCallback(on_epoch_end = on_epoch_end)
 callbacks_list = [checkpoint, print_callback]
 
 #train the model
-model.fit(X_2, y_2, epochs=500, batch_size=128, verbose=2, callbacks=callbacks_list)
+model.fit(X_2, y_2, epochs=500, batch_size=256, verbose=1, callbacks=callbacks_list)
 #save the model
-model.save("len_50_final_256.h5")
+model.save("final_len_50_256_no_dropout.h5")
 print("Training Completed!")
