@@ -10,11 +10,11 @@ from keras.utils import np_utils
 import sys
 
 #open text file with poems
-text = (open("quizbowl_small.txt").read()).lower()
-#text = text.split(' ')
+text = (open("quizbowl.txt").read()).lower()
+text = text.split(' ')
 #sort list of unique characters in text
 chars = sorted(list(set(text)))
-print(chars)
+#print(chars)
 #dictionary mapping cchars to ints
 char_to_int = {char:n for n,char in enumerate(chars)}
 #dictionary mapping ints to chars
@@ -24,7 +24,7 @@ int_to_char = {n:char for n,char in enumerate(chars)}
 X,y = [],[]
 text_length = len(text)
 #length of string given to NN to make prediction
-str_length = 100
+str_length = 25
 print("Unique chars:", len(chars))
 print("Text length:", text_length)
 
@@ -50,17 +50,17 @@ print('done')
 model = Sequential()
 #add long short term memory cell
 #output_shape is (_, 700), input_shape is (number_of_inputs, input_length), return full sequence
-model.add(LSTM(256, input_shape=(X_2.shape[1], X_2.shape[2]), return_sequences=True)) #layer 1
+model.add(LSTM(50, input_shape=(X_2.shape[1], X_2.shape[2]), return_sequences=True)) #layer 1
 #account for overfitting
 model.add(Dropout(0.2))
 
 #add another LSTM layer
-model.add(LSTM(256, return_sequences=True)) #layer 2
+model.add(LSTM(50, return_sequences=True)) #layer 2
 #account for overfitting
 model.add(Dropout(0.2))
 
 #add another LSTM layer
-model.add(LSTM(256)) #layer 3
+model.add(LSTM(50)) #layer 3
 #account for overfitting
 model.add(Dropout(0.2))
 
@@ -74,24 +74,24 @@ print("Model compiled")
 
 #load model
 # 256_2.h5 is the current best model
-model.load_weights('256_2.h5')
+model.load_weights('word_50_50_50_2.h5')
 
 #sample_word = "" if len(sys.argv) < 2 else sys.argv[1]
 def check_model(keyword=""):
     #take random line of integer training data as starting input
     if len(keyword) > 0:
-        int_train = X[random.randint(0, len(X))][:-len(keyword)]
+        int_train = X[random.randint(0, len(X)-str_length)][:-len(keyword)]
         for c in keyword:
             int_train.append(char_to_int[c])
     else:
-        int_train = X[random.randint(0, len(X))]
+        int_train = X[random.randint(0, len(X)-str_length)]
     #convert training data back to array of chars
     chars_array = [int_to_char[n] for n in int_train]
-    print("Input: " + ''.join(chars_array))
+    print("Input: " + ' '.join(chars_array))
     starting_text = '\n' + ''.join(chars_array) + '\n'
 
     #number of characters to generate
-    num_to_generate = 200
+    num_to_generate = 50
     for i in range(num_to_generate):
         #reshape data to feed to NN
         x = np.reshape(int_train, (1, len(int_train), 1))
@@ -113,6 +113,7 @@ def check_model(keyword=""):
 
     predicted_text = ""
     for c in chars_array[str_length:]:
+        predicted_text += ' '
         predicted_text += c
         #print("C:" + c)
     #return(predicted_text[predicted_text.find('\n'):predicted_text.rfind('\n')])
