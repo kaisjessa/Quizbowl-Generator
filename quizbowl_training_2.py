@@ -116,7 +116,7 @@ model.add(LSTM(256)) #layer 3
 #Fully connected (dense) output layer
 model.add(Dense(y_2.shape[1], activation='softmax')) #layer 4
 #minimize loss
-model.compile(loss='categorical_crossentropy', optimizer='adam')
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 print("Model compiled")
 
 filepath = "current_len_50_256_no_dropout.h5"
