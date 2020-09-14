@@ -10,7 +10,7 @@ from keras.utils import np_utils
 import sys
 
 #open text file with poems
-text = (open("quizbowl_small.txt").read()).lower()
+text = (open("quizbowl.txt").read()).lower()
 #text = text.split(' ')
 #sort list of unique characters in text
 chars = sorted(list(set(text)))
@@ -52,29 +52,29 @@ model = Sequential()
 #output_shape is (_, 700), input_shape is (number_of_inputs, input_length), return full sequence
 model.add(LSTM(256, input_shape=(X_2.shape[1], X_2.shape[2]), return_sequences=True)) #layer 1
 #account for overfitting
-model.add(Dropout(0.2))
+#model.add(Dropout(0.2))
 
 #add another LSTM layer
 model.add(LSTM(256, return_sequences=True)) #layer 2
 #account for overfitting
-model.add(Dropout(0.2))
+#model.add(Dropout(0.2))
 
 #add another LSTM layer
 model.add(LSTM(256)) #layer 3
 #account for overfitting
-model.add(Dropout(0.2))
+#model.add(Dropout(0.2))
 
 #Fully connected (dense) output layer
 model.add(Dense(y_2.shape[1], activation='softmax')) #layer 4
 #minimize loss
-model.compile(loss='categorical_crossentropy', optimizer='adam')
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 print("Model compiled")
 
 
 
 #load model
 # 256_2.h5 is the current best model
-model.load_weights('256_2.h5')
+model.load_weights('256_no_dropout_3.h5')
 
 #sample_word = "" if len(sys.argv) < 2 else sys.argv[1]
 def check_model(keyword=""):
@@ -87,11 +87,11 @@ def check_model(keyword=""):
         int_train = X[random.randint(0, len(X)-str_length)]
     #convert training data back to array of chars
     chars_array = [int_to_char[n] for n in int_train]
-    print("Input: " + ''.join(chars_array))
+    print('Input: "' + ''.join(chars_array) + '"')
     starting_text = '\n' + ''.join(chars_array) + '\n'
 
     #number of characters to generate
-    num_to_generate = 200
+    num_to_generate = 500
     for i in range(num_to_generate):
         #reshape data to feed to NN
         x = np.reshape(int_train, (1, len(int_train), 1))
@@ -100,7 +100,10 @@ def check_model(keyword=""):
 
         #the prediction is the index of the next character index
         #argmax takes the highest number in the onehot array
-        int_prediction = np.argmax(model.predict(x, verbose=0))
+        #int_prediction = np.argmax(model.predict(x, verbose=0))
+        #use probability distribution
+        prediction_output = model.predict(x, verbose=0)
+        int_prediction = np.random.choice(len(prediction_output[0]), p=prediction_output[0])
         #print(model.predict(x, verbose=0))
         #print("char prediction:" + int_to_char[int_prediction])
         #append prediction to string array for output
