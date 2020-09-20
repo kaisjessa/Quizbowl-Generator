@@ -13,7 +13,7 @@ def strip_accents(text):
     text = text.replace('\n', ' ').replace('\r', '')
     return str(text)
 
-with open('quizbowl_answers.txt', encoding='utf_8') as f1:
-	with open('quizbowl_answers2.txt', 'w', encoding='utf_8') as f2:
+with open('quizbowl_math_tossups.txt', encoding='utf_8') as f1:
+	with open('quizbowl_math_tossups2.txt', 'w', encoding='utf_8') as f2:
 		for line in f1:
 			f2.write(strip_accents(line))
