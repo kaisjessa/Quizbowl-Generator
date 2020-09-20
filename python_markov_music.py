@@ -1,7 +1,7 @@
 #https://towardsdatascience.com/simulating-text-with-markov-chains-in-python-1a27e6d13fc6
 import numpy as np
-text1 = open('quizbowl_tossups.txt', encoding='utf8').read()
-text2 = open('quizbowl_answers.txt', encoding='utf8').read()
+text1 = open('quizbowl_music_tossups2.txt', encoding='utf8').read()
+text2 = open('quizbowl_music_answers2.txt', encoding='utf8').read()
 
 corpus = text1.split(" ")
 corpus2 = []
